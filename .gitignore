@@ -1,0 +1,50 @@
+
+vids/*
+bin/
+obj/
+# Visual Studio code coverage results
+*.coverage
+*.coveragexml
+
+# Native interoperability
+*.dll
+*.so
+*.dylib
+
+# Compressed files
+*.7z
+*.zip
+*.rar
+*.gz
+*.bzip
+*.tar
+
+# Package files
+*.nupkg
+*.pupkg
+*.mpack
+
+# Package directories
+packages/
+node_modules/
+bower_components/
+
+# TypeScript
+*.js
+*.js.map
+*.ts
+*.ts.map
+
+# Other
+[Dd]ebug/
+[Rr]elease/
+[Tt]est[Rr]esult*/
+[Bb]uild[Ll]og.*
+*.[Pp]ublish.xml
+*.sw?
+*.pfx
+*.snk
+*.cache
+*.dbmdl
+*.dbproj.schemaview
+*.jfm

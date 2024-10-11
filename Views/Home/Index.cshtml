@@ -1,0 +1,105 @@
+@page
+@* @model MelancholyYoutubeMusicDownloader.Models.UrlModels; *@
+<h1>hello world</h1>
+<form asp-controller="HomeController" method="post" asp-action="ProcessUrls" role="form">
+    <input asp-for="Urls" placeholder="Enter URLs" />
+    <button type="submit">Submit</button>
+</form>
+@using (Html.BeginForm())
+{
+    <label for="Urls">How old are you?</label>
+      <input asp-for="Urls" placeholder="Enter URLs" />
+    <br />
+  
+    <input type="submit" id="Submit">  
+}
+<script 
+src="/_framework/aspnetcore-browser-refresh.js"></script>
+@* @page
+@model IndexModel
+@{
+    ViewData["Title"] = "Melancholy YT Downloader";
+}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>@ViewData["Title"]</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #1a1a1a;
+            color: #e0e0e0;
+        }
+        .navbar {
+            background-color: #2a2a2a;
+            padding: 1rem;
+        }
+        .navbar h1 {
+            margin: 0;
+            font-size: 1.5rem;
+        }
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 2rem 1rem;
+            text-align: center;
+        }
+        h2 {
+            font-size: 3rem;
+            margin-bottom: 1rem;
+        }
+        p {
+            font-size: 1.2rem;
+            margin-bottom: 2rem;
+        }
+        textarea {
+            width: 100%;
+            height: 150px;
+            background-color: #2a2a2a;
+            border: 1px solid #3a3a3a;
+            color: #e0e0e0;
+            padding: 0.5rem;
+            margin-bottom: 1rem;
+            font-size: 1rem;
+        }
+        button {
+            background-color: #3a3a3a;
+            color: #e0e0e0;
+            border: none;
+            padding: 0.75rem 2rem;
+            font-size: 1rem;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+        button:hover {
+            background-color: #4a4a4a;
+        }
+    </style>
+</head>
+<body>
+    <nav class="navbar">
+        <h1>Melancholy yt downloader</h1>
+    </nav>
+
+    <main class="container">
+        <h2>What do you want to download?</h2>
+        <p>Paste YT links with commas as separation</p>
+
+        <form method="post">
+            <textarea asp-for="Urls" placeholder="https://youtube.com/watch?v=example1, https://youtube.com/watch?v=example2"></textarea>
+            <button type="submit">Download</button>
+        </form>
+    </main>
+
+    @section Scripts {
+        <script>
+            // You can add any client-side JavaScript here if needed
+        </script>
+    }
+</body>
+</html> *@
