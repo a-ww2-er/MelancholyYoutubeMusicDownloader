@@ -19,18 +19,48 @@ public class UrlsController : ControllerBase
     {
          var youtube = new YoutubeClient();
         string[] allLinks = userUrls.Urls.Split(',');
+      List<string> downloadedFiles = new List<string>(); 
+      List<string> failedFiles = new List<string>(); 
         foreach (var url in allLinks)
         {
+            try
+            {
+                
+        
             var video = await youtube.Videos.GetAsync(url);
+            if(video != null){
             var title = video.Title;
             var streamInfo = await youtube.Videos.Streams.GetManifestAsync(video.Id);
             var stream = streamInfo.GetAudioOnlyStreams().GetWithHighestBitrate();
             
-         
-           await youtube.Videos.Streams.DownloadAsync(stream, @"vids\" + title + ".mp3");
-        }
-        Console.WriteLine(allLinks);
-        Console.WriteLine(userUrls.Urls);
-        return Ok("videos downloaded"); // Return an HTTP 200 OK response
+          string cleanedFilename = title.Replace("\"", "").Replace("/", "-").Replace(":", "-").Replace("*", "").Replace("?", "").Replace("<", "").Replace(">", "").Replace("|", "").Replace("\\", "-").Replace("@", "");
+           await youtube.Videos.Streams.DownloadAsync(stream, @"musics\" + cleanedFilename + ".mp3");
+             downloadedFiles.Add(cleanedFilename);
+            }else{
+                Console.WriteLine(url + " " + "is not a valid url");
+                failedFiles.Add(url);
+              }
+            }
+            catch (System.Exception)
+            {
+                
+                Console.WriteLine(url + " " + "could not be saved");
+                 failedFiles.Add(url);
+            }
+            
+            }
+       string downloadedFilesString = string.Join(", ", downloadedFiles); 
+       string failedFilesString = string.Join(", ", failedFiles); 
+int downloadedFilesCount = downloadedFiles.Count; 
+
+ var returnObj = new { 
+    message="Musics download request completed!",
+    success = true, 
+    filesDownloadedCount = downloadedFilesCount, 
+    filesDownloaded = downloadedFilesString ,
+    failedToDownload =failedFilesString
+};
+
+return Ok(returnObj);
     }
 }
