@@ -18,11 +18,13 @@ public class UrlsController : ControllerBase
     public async Task<IActionResult> ProcessUserUrls([FromBody] UrlModel userUrls)
     {
          var youtube = new YoutubeClient();
-        string[] allLinks = userUrls.Urls.Split(',');
+         string formattedString = userUrls.Urls.Replace("https",",https");
+        string[] allLinks = formattedString.Split(',');
       List<string> downloadedFiles = new List<string>(); 
       List<string> failedFiles = new List<string>(); 
         foreach (var url in allLinks)
         {
+            if(url != ""){
             try
             {
                 
@@ -48,7 +50,7 @@ public class UrlsController : ControllerBase
                  failedFiles.Add(url);
             }
             
-            }
+            }}
        string downloadedFilesString = string.Join(", ", downloadedFiles); 
        string failedFilesString = string.Join(", ", failedFiles); 
 int downloadedFilesCount = downloadedFiles.Count; 
