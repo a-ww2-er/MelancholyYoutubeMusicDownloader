@@ -28,26 +28,26 @@ A powerful YouTube music downloader built with modern .NET technologies. Downloa
 ### Installation
 
 1. Clone the repository
-\`\`\`bash
+```bash
 git clone https://github.com/a-ww2-er/melancholy-youtube-music-downloader.git
 cd melancholy-youtube-music-downloader
-\`\`\`
+```
 
 2. Build the project
-\`\`\`bash
+```bash
 dotnet build
-\`\`\`
+```
 
 3. Run the application
-\`\`\`bash
+```bash
 dotnet run
-\`\`\`
+```
 
 ## 📖 Usage
 
 ### Web Interface (MVC)
 
-1. Navigate to \`/services/urls\` in your web browser
+1. Navigate to `/services/urls` in your web browser
 2. Enter YouTube URL(s) in the input field
 3. Click "Process URLs"
 4. Wait for processing to complete
@@ -55,17 +55,17 @@ dotnet run
 
 ### API Endpoint
 
-#### Endpoint: \`/api/UrlApi/url-upload\`
+#### Endpoint: `/api/UrlApi/url-upload`
 
 **Request Format:**
-\`\`\`json
+```json
 {
     "Urls": "https://youtu.be/K9O1dXr9HU8?si=tsBVoDc5f-vaMD0_"
 }
-\`\`\`
+```
 
 **Response Format:**
-\`\`\`json
+```json
 {
     "message": "Musics download request completed!",
     "success": true,
@@ -73,27 +73,27 @@ dotnet run
     "filesDownloaded": "the weeknd - blinding lights",
     "failedToDownload": ""
 }
-\`\`\`
+```
 
 #### Using with API Testing Tools
 
 ##### Postman
 1. Create a new POST request
-2. Set URL to \`{your-base-url}/api/UrlApi/url-upload\`
-3. Set Content-Type header to \`application/json\`
+2. Set URL to `{your-base-url}/api/UrlApi/url-upload`
+3. Set Content-Type header to `application/json`
 4. Add request body in JSON format
 5. Send request
 
 ##### Insomnia
 1. Create a new POST request
-2. Set URL to \`{your-base-url}/api/UrlApi/url-upload\`
+2. Set URL to `{your-base-url}/api/UrlApi/url-upload`
 3. Select JSON body type
 4. Add request body
 5. Send request
 
 ## 📁 Project Structure
 
-\`\`\`
+```
 melancholy-youtube-music-downloader/
 ├── Controllers/
 │   ├── UrlController.cs        # MVC Controller
@@ -104,19 +104,19 @@ melancholy-youtube-music-downloader/
 ├── Models/
 │   └── UrlModel.cs            # Data Models
 └── musics/                    # Downloaded Music Storage
-\`\`\`
+```
 
 ## 🔧 Technical Details
 
-- **MVC Controller**: \`UrlController\`
-  - Route: \`/services/urls\`
+- **MVC Controller**: `UrlController`
+  - Route: `/services/urls`
   - Handles web interface
   - Provides ZIP download functionality
 
-- **API Controller**: \`UrlApiController\`
-  - Route: \`/api/UrlApi/url-upload\`
+- **API Controller**: `UrlApiController`
+  - Route: `/api/UrlApi/url-upload`
   - Handles API requests
-  - Saves files to \`musics\` folder
+  - Saves files to `musics` folder
 
 ## 🤝 Contributing
 
