@@ -10,7 +10,13 @@ builder.Services.AddControllersWithViews();
 // builder.Services.AddControllers();
 
 var app = builder.Build();
-
+app.UseStaticFiles();  
+app.UsePathBase("/");  
+//  app.UseStaticFiles(new StaticFileOptions  
+//  {   
+//      RequestPath = "/"  
+//  });  
+ app.UsePathBase("/");
 app.MapGet("/", () => "Hello World!");
 
 app.UseRouting();

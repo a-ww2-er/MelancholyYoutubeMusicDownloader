@@ -7,6 +7,7 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <PackageReference Include="Syncfusion.EJ2.AspNet.Core" Version="28.1.38" />
     <PackageReference Include="YoutubeExplode" Version="6.4.3" />
   </ItemGroup>
 

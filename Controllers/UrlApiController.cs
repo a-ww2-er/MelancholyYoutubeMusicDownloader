@@ -1,27 +1,20 @@
-
-
-using System;
-using System.Collections.Generic;
-using System.IO;
-using System.IO.Compression;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using YoutubeExplode;
 using YoutubeExplode.Videos.Streams;
+using System;
+using System.Collections.Generic;
 using MelancholyYoutubeMusicDownloader.Models;
 
-[Route("service/[controller]")]
-public class UrlsController : Controller
+[Route("api/[controller]")]
+public class UrlApiController : ControllerBase
 {
-    private readonly string _tempDir = Path.Combine(Path.GetTempPath(), "MusicDownloads");
+    // [HttpGet]
+    // public IActionResult Index()
+    // {
+    // }
 
-    [HttpGet]
-    public IActionResult Upload()
-    {
-        return View();
-    }
-
-    [HttpPost("ProcessUserUrls")]
+    [HttpPost("url-upload")]
     public async Task<IActionResult> ProcessUserUrls([FromBody] UrlModel userUrls)
     {
         var youtube = new YoutubeClient();
@@ -30,9 +23,6 @@ public class UrlsController : Controller
         List<string> downloadedFiles = new List<string>();
         List<string> failedFiles = new List<string>();
 
-        // Ensure temporary directory exists
-        Directory.CreateDirectory(_tempDir);
-        Console.WriteLine("temp dir" , _tempDir);
         foreach (var url in allLinks)
         {
             try
@@ -45,8 +35,7 @@ public class UrlsController : Controller
                     var stream = streamInfo.GetAudioOnlyStreams().GetWithHighestBitrate();
 
                     string cleanedFilename = CleanFileName(title);
-                    string filePath = Path.Combine(_tempDir, $"{cleanedFilename}.mp3");
-                    await youtube.Videos.Streams.DownloadAsync(stream, filePath);
+                    await youtube.Videos.Streams.DownloadAsync(stream, $"musics/{cleanedFilename}.mp3");
                     downloadedFiles.Add(cleanedFilename);
                 }
                 else
@@ -62,26 +51,6 @@ public class UrlsController : Controller
             }
         }
 
-        string zipFileName = $"MusicDownload_{DateTime.Now:yyyyMMddHHmmss}.zip";
-        string zipPath = Path.Combine(_tempDir, zipFileName);
-        Console.WriteLine("zip path" , zipPath);
-        using (var zipArchive = ZipFile.Open(zipPath, ZipArchiveMode.Create))
-        {
-            foreach (var file in downloadedFiles)
-            {
-                zipArchive.CreateEntryFromFile(Path.Combine(_tempDir, $"{file}.mp3"), $"{file}.mp3");
-            }
-        }
-
-        byte[] zipBytes = await System.IO.File.ReadAllBytesAsync(zipPath);
-
-        // Clean up temporary files
-        foreach (var file in downloadedFiles)
-        {
-            System.IO.File.Delete(Path.Combine(_tempDir, $"{file}.mp3"));
-        }
-        System.IO.File.Delete(zipPath);
-
         string downloadedFilesString = string.Join(", ", downloadedFiles);
         string failedFilesString = string.Join(", ", failedFiles);
         int downloadedFilesCount = downloadedFiles.Count;
@@ -92,9 +61,7 @@ public class UrlsController : Controller
             success = true,
             filesDownloadedCount = downloadedFilesCount,
             filesDownloaded = downloadedFilesString,
-            failedToDownload = failedFilesString,
-            zipFileName = zipFileName,
-            zipFileContent = Convert.ToBase64String(zipBytes)
+            failedToDownload = failedFilesString
         };
 
         return Ok(returnObj);
@@ -115,4 +82,3 @@ public class UrlsController : Controller
             .Replace("@", "");
     }
 }
-

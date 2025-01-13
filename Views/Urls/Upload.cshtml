@@ -1,0 +1,127 @@
+@{
+    ViewData["Title"] = "Melancholy YT music downloader";
+}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>@ViewData["Title"]</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="~/css/site.css" />
+</head>
+<body>
+    <div class="container">
+        <nav class="navbar">
+            <h1>Melancholy youtube music downloader</h1>
+        </nav>
+
+        <main class="main-content">
+            <form class="url-form" id="urlForm">
+                <textarea type="text" name="urls" class="url-input" placeholder="Enter URLs to process (without spacing)" required ></textarea>
+                <button type="submit" class="submit-btn">Process URLs</button>
+            </form>
+
+            <div class="loading" id="loading">
+                <div class="spinner"></div>
+                <p>Processing your request, this might take a while...</p>
+            </div>
+
+            <div class="result" id="result">
+                <h2>Processing Results</h2>
+                <div class="result-item" id="message"></div>
+                <div class="result-item" id="success"></div>
+                <div class="result-item" id="filesDownloadedCount"></div>
+                <div class="result-item">
+                    <h3>Files Downloaded:</h3>
+                    <div class="files-list" id="filesDownloaded"></div>
+                </div>
+                <div class="result-item" id="failedToDownload"></div>
+                <div class="result-item">
+                    <button id="downloadBtn" class="download-btn" style="display: block;">Download Zip File</button>
+                </div>
+            </div>
+        </main>
+
+        <footer class="footer">
+            <p>&copy; 2024 Melancholy yt music downloader.By :  <a href="https://github.com/a-ww2-er"> a-ww2-er.</a></p>
+        </footer>
+    </div>
+
+    <script>
+        document.getElementById('urlForm').addEventListener('submit', async function(e) {
+            e.preventDefault();
+            const form = e.target;
+            const urls = form.urls.value;
+
+            document.getElementById('loading').style.display = 'block';
+            document.getElementById('result').style.display = 'none';
+            document.getElementById('downloadBtn').style.display = 'none';
+
+            try {
+                const response = await fetch('/service/urls/ProcessUserUrls', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({ urls: urls }),
+                });
+
+                const data = await response.json();
+
+                document.getElementById('message').textContent = data.message;
+                document.getElementById('success').textContent = `Completed: ${data.success}`;
+                document.getElementById('filesDownloadedCount').textContent = `Files Downloaded: ${data.filesDownloadedCount}`;
+                document.getElementById('filesDownloaded').innerHTML = data.filesDownloaded.split(', ').map(file => `<div>${file}</div>`).join('');
+                document.getElementById('failedToDownload').textContent = `Failed to Download: ${data.failedToDownload || 'None'}`;
+
+                if (data.zipFileContent) {
+                    const downloadBtn = document.getElementById('downloadBtn');
+                    downloadBtn.style.display = 'block';
+                    downloadBtn.onclick = function() {
+                        const blob = base64toBlob(data.zipFileContent, 'application/zip');
+                        const url = URL.createObjectURL(blob);
+                        const a = document.createElement('a');
+                        a.href = url;
+                        a.download = data.zipFileName;
+                        document.body.appendChild(a);
+                        a.click();
+                        document.body.removeChild(a);
+                        URL.revokeObjectURL(url);
+                    };
+                }
+
+                document.getElementById('loading').style.display = 'none';
+                document.getElementById('result').style.display = 'block';
+            } catch (error) {
+                console.error('Error:', error);
+                document.getElementById('loading').style.display = 'none';
+                alert('An error occurred while processing your request. Please try again.');
+            }
+        });
+
+        function base64toBlob(base64Data, contentType) {
+            contentType = contentType || '';
+            var sliceSize = 1024;
+            var byteCharacters = atob(base64Data);
+            var bytesLength = byteCharacters.length;
+            var slicesCount = Math.ceil(bytesLength / sliceSize);
+            var byteArrays = new Array(slicesCount);
+
+            for (var sliceIndex = 0; sliceIndex < slicesCount; ++sliceIndex) {
+                var begin = sliceIndex * sliceSize;
+                var end = Math.min(begin + sliceSize, bytesLength);
+
+                var bytes = new Array(end - begin);
+                for (var offset = begin, i = 0; offset < end; ++i, ++offset) {
+                    bytes[i] = byteCharacters[offset].charCodeAt(0);
+                }
+                byteArrays[sliceIndex] = new Uint8Array(bytes);
+            }
+            return new Blob(byteArrays, { type: contentType });
+        }
+    </script>
+</body>
+</html>
+
